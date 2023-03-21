@@ -1,0 +1,14 @@
+data
+sample_videos
+runs
+checkpoints
+*.mp4
+*.pyc
+tmp
+tmp_train
+tmp_test
+tmp_seg
+log
+result
+pretrain
+mmediting
