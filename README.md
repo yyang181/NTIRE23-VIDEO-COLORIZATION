@@ -69,6 +69,10 @@ CUDA_VISIBLE_DEVICES=0 python test_NTIRE23_Track_1_FID.py
 
 For more details please refer to [test_NTIRE23_Track_1_FID.py](https://github.com/yyang181/NTIRE23-VIDEO-COLORIZATION/blob/main/BiSTNet-NTIRE2023/test_NTIRE23_Track_1_FID.py).
 
+## License
+
+BiSTNet is released under the MIT license, while some specific operations in this library are with other licenses. Please refer to [LICENSES.md](https://github.com/yyang181/NTIRE23-VIDEO-COLORIZATION/blob/v1.0.1/BiSTNet-NTIRE2023/LICENSE) for the careful check, if you are using our code for commercial matters.
+
 ## Acknowledgement
 
 Part of our codes are taken from [DeepExemplar](https://github.com/zhangmozhe/Deep-Exemplar-based-Video-Colorization), [RAFT](https://github.com/princeton-vl/RAFT), [HED](https://github.com/sniklaus/pytorch-hed) and [ProtoSeg](https://github.com/tfzhou/ProtoSeg). Thanks for their awesome works.
