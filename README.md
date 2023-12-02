@@ -5,11 +5,19 @@ Please visit [test_NTIRE23_Track_1_FID.py](https://github.com/yyang181/NTIRE23-V
 
 We provide the colorized images [HERE](https://drive.google.com/drive/folders/1jwVKK2IfAp01C6KpuqB3Wcm0uT4yXZBB?usp=share_link), and the reference images used to obtain the results [HERE](https://drive.google.com/drive/folders/1miA49ALEKDxsDlmsdZX38tik9V4ECqES?usp=share_link).
 
+## News
+
+- [2023-12-08] Colab demo for BiSTNet is available [![google colab logo](https://camo.githubusercontent.com/84f0493939e0c4de4e6dbe113251b4bfb5353e57134ffd9fcab6b8714514d4d1/68747470733a2f2f636f6c61622e72657365617263682e676f6f676c652e636f6d2f6173736574732f636f6c61622d62616467652e737667)](https://colab.research.google.com/drive/1T7-BOpSkd41fNW8bffo6aXSeK_jizsvv#scrollTo=OVMNWEaz2b06)
+
 ## :briefcase: Dependencies and Installation
 
-- PyTorch >= 1.8.0
+- PyTorch >= 1.8.0 (please do not use 2.1.0)
 
 - CUDA >= 10.2
+
+- mmcv == 1.x
+
+- mmediting == 0.x
 
 - Other required packages
 
@@ -31,11 +39,11 @@ conda activate bistnet
 # install pytortch
 conda install pytorch==1.10.1 torchvision==0.11.2 torchaudio==0.10.1 cudatoolkit=11.3 -c pytorch -c conda-forge
 
-# mmcv install 
+# mmcv install (1.x, please do not use 2.x)
 pip install -U openmim
 mim install mmcv-full
 
-# install mmediting 
+# install mmediting (0.x, please do not use 1.x)
 git clone https://github.com/open-mmlab/mmediting.git
 cd mmediting
 pip3 install -e .

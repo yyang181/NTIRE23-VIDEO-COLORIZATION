@@ -65,3 +65,6 @@ yacs==0.1.8
 yapf==0.32.0
 zipp==3.6.0
 torchcontrib==0.0.2
+progressbar2==4.2.0
+progressbar==2.5
+yacs==0.1.8
