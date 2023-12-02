@@ -4,6 +4,7 @@ runs
 checkpoints
 *.mp4
 *.pyc
+*.zip
 tmp
 tmp_train
 tmp_test
