@@ -71,7 +71,7 @@ For more details please refer to [test_NTIRE23_Track_1_FID.py](https://github.co
 
 ## License
 
-BiSTNet is released under the MIT license, while some specific operations in this library are with other licenses. Please refer to [LICENSES.md](https://github.com/yyang181/NTIRE23-VIDEO-COLORIZATION/blob/main/BiSTNet-NTIRE2023/LICENSE.md) for the careful check, if you are using our code for commercial matters.
+BiSTNet is released under the MIT license, while some methods adopted in this project are with other licenses. Please refer to [LICENSES.md](https://github.com/yyang181/NTIRE23-VIDEO-COLORIZATION/blob/main/BiSTNet-NTIRE2023/LICENSE.md) for the careful check, if you are using our code for commercial matters. Thank @milmor so much for bringing up this concern about license.
 
 ## Acknowledgement
 

@@ -1,6 +1,6 @@
-# Licenses for special operations
+# Licenses
 
-In this file, we list the operations with other licenses instead of MIT license. Users should be careful about adopting these operations in any commercial matters. Part of our codes are taken from [DeepExemplar](https://github.com/zhangmozhe/Deep-Exemplar-based-Video-Colorization), [RAFT](https://github.com/princeton-vl/RAFT), [HED](https://github.com/sniklaus/pytorch-hed) and [ProtoSeg](https://github.com/tfzhou/ProtoSeg). Thanks for their awesome works.
+In this file, we list the methods with both MIT license and other licenses. Users should be careful about adopting these operations in any commercial matters. Part of our codes are taken from [DeepExemplar](https://github.com/zhangmozhe/Deep-Exemplar-based-Video-Colorization), [RAFT](https://github.com/princeton-vl/RAFT), [HED](https://github.com/sniklaus/pytorch-hed) and [ProtoSeg](https://github.com/tfzhou/ProtoSeg). Thanks for their awesome works.
 
 |                           Methods                            |                           License                            |
 | :----------------------------------------------------------: | :----------------------------------------------------------: |
