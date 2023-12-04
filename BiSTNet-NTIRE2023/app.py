@@ -23,11 +23,14 @@ import torch
 #     os.system("unzip data.zip")
 #     os.system("unzip models.zip")
 
-os.system("pip3 install moviepy gradio yacs Pillow timm einops scikit-image progressbar2 progressbar torchcontrib opencv-contrib-python")
+# for openxlab codes
+os.system("pip uninstall torch -y")
+os.system("pip install torch==2.0.0 torchvision==0.15.1 torchaudio==2.0.1")
 os.system("pip install -U openmim")
 os.system("mim install mmcv-full")
 os.system("git clone -b 0.x https://github.com/open-mmlab/mmediting.git")
 os.system("pip3 install -e ./mmediting/")
+os.system("pip3 install moviepy gradio yacs Pillow timm einops scikit-image progressbar2 progressbar torchcontrib opencv-contrib-python")
 
 from moviepy.editor import *
 import gradio as gr
