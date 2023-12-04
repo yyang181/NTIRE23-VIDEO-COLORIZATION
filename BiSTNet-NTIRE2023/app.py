@@ -5,20 +5,20 @@ import os
 import torch
 if torch.__version__ == '2.0.1':
     print('torch version is 2.0.1')
-    print(torch.__version__)
-    assert 0
+    # print(torch.__version__)
+    # assert 0
     os.system("pip uninstall torch -y")
     os.system("pip install torch==2.0.0 torchvision==0.15.1 torchaudio==2.0.1")
 
-# sys.path.append('BiSTNet-NTIRE2023')
-# os.system("mim install mmcv-full")
-# os.system("git clone -b 0.x https://github.com/open-mmlab/mmediting.git")
-# os.system("pip3 install -e ./mmediting/")
+    sys.path.append('BiSTNet-NTIRE2023')
+    os.system("mim install mmcv-full")
+    os.system("git clone -b 0.x https://github.com/open-mmlab/mmediting.git")
+    os.system("pip3 install -e ./mmediting/")
 
-# os.system("wget https://github.com/yyang181/NTIRE23-VIDEO-COLORIZATION/releases/download/v1.0.3/checkpoints.zip")
-# os.system("wget https://github.com/yyang181/NTIRE23-VIDEO-COLORIZATION/releases/download/v1.0.3/data.zip")
-# os.system("wget https://github.com/yyang181/NTIRE23-VIDEO-COLORIZATION/releases/download/v1.0.3/models.zip")
-# os.system("unzip checkpoints.zip && data.zip && models.zip")
+    os.system("wget https://github.com/yyang181/NTIRE23-VIDEO-COLORIZATION/releases/download/v1.0.3/checkpoints.zip")
+    os.system("wget https://github.com/yyang181/NTIRE23-VIDEO-COLORIZATION/releases/download/v1.0.3/data.zip")
+    os.system("wget https://github.com/yyang181/NTIRE23-VIDEO-COLORIZATION/releases/download/v1.0.3/models.zip")
+    os.system("unzip checkpoints.zip && data.zip && models.zip")
 
 from moviepy.editor import *
 import gradio as gr
@@ -431,7 +431,7 @@ def video2frames(video_dir, out_frames_dir="None"):
     print("Fps is {}".format(fps))
     return int(fps)
 
-def inference(video, ref1, ref2, width, height, large_input_flag, color_fix):
+def inference(video, ref1, ref2, width, height):
     video_name = video.split('/')[-1].split('.')[0]
     out_frames_dir="./results/input/"+video_name
     video_fps = video2frames(video, out_frames_dir)
