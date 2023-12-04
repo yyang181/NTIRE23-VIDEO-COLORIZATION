@@ -34,7 +34,7 @@ os.system("mim install mmcv-full")
 # os.system("pip3 uninstall mmedit")
 # os.system("git clone -b 0.x https://github.com/open-mmlab/mmediting.git")
 # os.system("pip3 install -e ./mmediting/")
-os.system("pip3 install mmedit")
+os.system("pip3 install mmedit==0.16.1")
 
 os.system("pip3 install moviepy gradio yacs Pillow timm einops scikit-image progressbar2 progressbar torchcontrib opencv-contrib-python")
 
