@@ -1,8 +1,8 @@
 from __future__ import print_function
 import sys
-sys.path.append('BiSTNet-NTIRE2023')
-
 import os
+
+sys.path.append('BiSTNet-NTIRE2023')
 os.system("pip uninstall torch -y")
 os.system("pip install torch==2.0.0 torchvision==0.15.1 torchaudio==2.0.1")
 os.system("mim install mmcv-full")
@@ -14,7 +14,7 @@ os.system("wget https://github.com/yyang181/NTIRE23-VIDEO-COLORIZATION/releases/
 os.system("wget https://github.com/yyang181/NTIRE23-VIDEO-COLORIZATION/releases/download/v1.0.3/models.zip")
 os.system("unzip checkpoints.zip && data.zip && models.zip")
 
-
+from moviepy.editor import *
 import gradio as gr
 import argparse
 import glob
@@ -458,7 +458,48 @@ def patch2img(outs, idxes, sr_size, scale=4, crop_size=512):
 
 os.makedirs('./results', exist_ok=True)
 
-def inference(image, ref, width, height, large_input_flag, color_fix):
+def video2frames(video_dir, out_frames_dir="None"):
+    os.makedirs(out_frames_dir, exist_ok=True)
+    video = VideoFileClip(video_dir)
+    # audio = video.audio
+    # audio.write_audiofile(out_frames_dir + ".mp3")
+
+    vidcap = cv2.VideoCapture(video_dir)
+    # Find OpenCV version
+    (major_ver, minor_ver, subminor_ver) = (cv2.__version__).split('.')
+
+    # With webcam get(CV_CAP_PROP_FPS) does not work.
+    # Let's see for ourselves.
+
+    if int(major_ver)  < 3 :
+        fps = vidcap.get(cv2.cv.CV_CAP_PROP_FPS)
+        print("Frames per second using video.get(cv2.cv.CV_CAP_PROP_FPS): {0}".format(fps))
+    else :
+        fps = vidcap.get(cv2.CAP_PROP_FPS)
+        print("Frames per second using video.get(cv2.CAP_PROP_FPS) : {0}".format(fps))
+    success,image = vidcap.read()
+    count = 1
+    success = True
+    while success:
+        success,image = vidcap.read()
+        # if cv2.waitKey(10) == 27:                     # exit if Escape is hit
+        #     break    
+        if image is None:
+            print("Fps is {}".format(fps))
+            return 0    
+        if count % 100 == 0:
+            print("Video to frames: {}/frame{:04d}.png    Image shape:" .format(out_frames_dir, count),    image.shape)
+        cv2.imwrite("{}/f{:03d}.png".format(out_frames_dir, count), image)     # save frame as JPEG file
+        count += 1
+    vidcap.release()
+    # audio.release()
+    print("Fps is {}".format(fps))
+    return int(fps)
+
+def inference(video, ref, width, height, large_input_flag, color_fix):
+    fps = video2frames(video, out_frames_dir="input")
+    print("fps is {}".format(fps))
+
     epoch = 105000
     dirName_ckp = '20230311_NTIRE2023'
     nonlocal_test_path = os.path.join("checkpoints/", "finetune_test0610/nonlocal_net_iter_6000.pth")
@@ -710,14 +751,26 @@ If our work is useful for your research, please consider citing:
 <center><img src='https://visitor-badge.laobi.icu/badge?page_id=sunny2109/SAFMN' alt='visitors'></center>
 """
 
+# demo = gr.Interface(video_identity, 
+#                     gr.Video(), 
+#                     "playable_video", 
+#                     examples=[
+#                         os.path.join(os.path.dirname(__file__), 
+#                                      "video/video_sample.mp4")], 
+#                     cache_examples=True)
+
 demo = gr.Interface(
     inference, [
-        gr.inputs.Image(type="filepath", label="Input"),
+        gr.inputs.Video(label="video", type='mp4'),
+        # gr.inputs.Image(type="filepath", label="Input"),
         gr.inputs.Number(default=448, label="Image size width"),
         gr.inputs.Number(default=896, label="Image size height"),
 		gr.inputs.Checkbox(default=False, label="Memory-efficient inference"),
         gr.inputs.Checkbox(default=False, label="Color correction"),
-    ], [
+    ],
+    examples=[os.path.join(os.path.dirname(__file__), 
+                                     "video/video_sample.mp4")],
+    outputs = [
         gr.outputs.Image(type="numpy", label="Output"),
         gr.outputs.File(label="Download the output")
     ],
