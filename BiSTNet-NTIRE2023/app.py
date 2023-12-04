@@ -25,7 +25,8 @@ import os
 
 # for openxlab codes
 os.system("pip uninstall torch -y")
-os.system("pip install torch==2.0.0 torchvision==0.15.1 torchaudio==2.0.1")
+# os.system("pip install torch==2.0.0 torchvision==0.15.1 torchaudio==2.0.1")
+os.system("conda install pytorch==1.10.0 torchvision==0.11.0 torchaudio==0.10.0 cudatoolkit=11.3 -c pytorch -c conda-forge")
 os.system("pip install -U openmim")
 os.system("mim install mmcv-full")
 os.system("rm -rf mmediting")
