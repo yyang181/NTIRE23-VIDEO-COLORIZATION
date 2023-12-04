@@ -9,6 +9,7 @@ if torch.__version__ == '2.0.1':
     # assert 0
     os.system("pip uninstall torch -y")
     os.system("pip install torch==2.0.0 torchvision==0.15.1 torchaudio==2.0.1")
+    os.system("pip3 install moviepy gradio yacs Pillow timm einops scikit-image progressbar2 progressbar torchcontrib")
 
     sys.path.append('BiSTNet-NTIRE2023')
     os.system("mim install mmcv-full")
@@ -21,7 +22,6 @@ if torch.__version__ == '2.0.1':
     os.system("unzip checkpoints.zip")
     os.system("unzip data.zip")
     os.system("unzip models.zip")
-    os.system("pip3 install moviepy gradio yacs Pillow timm einops scikit-image progressbar2 progressbar torchcontrib")
 
 from moviepy.editor import *
 import gradio as gr
