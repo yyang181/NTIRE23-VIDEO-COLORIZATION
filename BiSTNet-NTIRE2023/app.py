@@ -33,6 +33,9 @@ os.system("git clone -b 0.x https://github.com/open-mmlab/mmediting.git")
 os.system("pip3 install -e ./mmediting/")
 os.system("pip3 install moviepy gradio yacs Pillow timm einops scikit-image progressbar2 progressbar torchcontrib opencv-contrib-python")
 
+print(torch.__version__)
+import mmedit
+assert 0
 from moviepy.editor import *
 import gradio as gr
 import shutil
