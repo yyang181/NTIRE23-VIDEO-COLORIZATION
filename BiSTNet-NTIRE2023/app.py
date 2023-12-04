@@ -24,7 +24,7 @@ import torch
 #     os.system("unzip models.zip")
 
 os.system("pip3 install moviepy gradio yacs Pillow timm einops scikit-image progressbar2 progressbar torchcontrib opencv-contrib-python")
-os.system("pip3 install mim")
+os.system("pip install -U openmim")
 os.system("mim install mmcv-full")
 os.system("git clone -b 0.x https://github.com/open-mmlab/mmediting.git")
 os.system("pip3 install -e ./mmediting/")
