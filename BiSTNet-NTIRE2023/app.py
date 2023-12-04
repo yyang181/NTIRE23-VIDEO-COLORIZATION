@@ -48,7 +48,6 @@ import time
 
 import cv2
 import numpy as np
-import torch
 import torch.backends.cudnn as cudnn
 import torchvision.transforms as transform_lib
 import PIL
