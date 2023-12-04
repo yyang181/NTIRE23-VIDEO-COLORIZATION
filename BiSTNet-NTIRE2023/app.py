@@ -2,7 +2,7 @@ from __future__ import print_function
 import sys
 import os
 
-import torch
+# import torch
 # if torch.__version__ == '2.0.1':
 #     print('torch version is 2.0.1')
 #     print(torch.__version__)
@@ -33,9 +33,7 @@ os.system("git clone -b 0.x https://github.com/open-mmlab/mmediting.git")
 os.system("pip3 install -e ./mmediting/")
 os.system("pip3 install moviepy gradio yacs Pillow timm einops scikit-image progressbar2 progressbar torchcontrib opencv-contrib-python")
 
-print(torch.__version__)
 import mmedit
-assert 0
 from moviepy.editor import *
 import gradio as gr
 import shutil
