@@ -24,12 +24,13 @@ import os
 #     os.system("unzip models.zip")
 
 # for openxlab codes
-os.system("pip uninstall torch -y")
+os.system("pip3 uninstall torch -y")
 # os.system("pip install torch==2.0.0 torchvision==0.15.1 torchaudio==2.0.1")
 os.system("conda install pytorch==1.10.0 torchvision==0.11.0 torchaudio==0.10.0 cudatoolkit=11.3 -c pytorch -c conda-forge")
-os.system("pip install -U openmim")
+os.system("pip3 install -U openmim")
 os.system("mim install mmcv-full")
 os.system("rm -rf mmediting")
+os.system("pip3 uninstall mmedit")
 os.system("git clone -b 0.x https://github.com/open-mmlab/mmediting.git")
 os.system("pip3 install -e ./mmediting/")
 os.system("pip3 install moviepy gradio yacs Pillow timm einops scikit-image progressbar2 progressbar torchcontrib opencv-contrib-python")
