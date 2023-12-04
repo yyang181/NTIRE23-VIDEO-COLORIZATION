@@ -1,3 +1,4 @@
+from __future__ import print_function
 import sys
 sys.path.append('BiSTNet-NTIRE2023')
 
@@ -14,7 +15,6 @@ os.system("wget https://github.com/yyang181/NTIRE23-VIDEO-COLORIZATION/releases/
 os.system("unzip checkpoints.zip && data.zip && models.zip")
 
 
-from __future__ import print_function
 import gradio as gr
 import argparse
 import glob
