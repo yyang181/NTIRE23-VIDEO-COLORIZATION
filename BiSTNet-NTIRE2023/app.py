@@ -23,7 +23,7 @@ import torch
 #     os.system("unzip data.zip")
 #     os.system("unzip models.zip")
 
-os.system("pip3 install moviepy gradio yacs Pillow timm einops scikit-image progressbar2 progressbar torchcontrib")
+os.system("pip3 install moviepy gradio yacs Pillow timm einops scikit-image progressbar2 progressbar torchcontrib opencv-contrib-python")
 from moviepy.editor import *
 import gradio as gr
 import shutil
