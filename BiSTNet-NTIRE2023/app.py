@@ -1,7 +1,6 @@
 from __future__ import print_function
 import sys
 import os
-sys.path.append('BiSTNet-NTIRE2023')
 
 import torch
 if torch.__version__ == '2.0.1':
