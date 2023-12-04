@@ -26,7 +26,7 @@ import os
 # for openxlab codes
 os.system("pip3 uninstall torch -y")
 # os.system("pip install torch==2.0.0 torchvision==0.15.1 torchaudio==2.0.1")
-os.system("pip install torch==1.10.1+cu111 torchvision==0.11.2+cu111 torchaudio==0.10.1 -f https://download.pytorch.org/whl/cu111/torch_stable.html")
+os.system("pip3 install torch==1.10.1+cu111 torchvision==0.11.2+cu111 torchaudio==0.10.1 -f https://download.pytorch.org/whl/cu111/torch_stable.html")
 os.system("pip3 install -U openmim")
 os.system("mim install mmcv-full")
 os.system("rm -rf mmediting")
