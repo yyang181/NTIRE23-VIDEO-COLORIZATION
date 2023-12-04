@@ -3,26 +3,27 @@ import sys
 import os
 
 import torch
-if torch.__version__ == '2.0.1':
-    print('torch version is 2.0.1')
-    print(torch.__version__)
-    # assert 0
-    os.system("pip uninstall torch -y")
-    os.system("pip install torch==2.0.0 torchvision==0.15.1 torchaudio==2.0.1")
-    os.system("pip3 install moviepy gradio yacs Pillow timm einops scikit-image progressbar2 progressbar torchcontrib")
+# if torch.__version__ == '2.0.1':
+#     print('torch version is 2.0.1')
+#     print(torch.__version__)
+#     # assert 0
+#     os.system("pip uninstall torch -y")
+#     os.system("pip install torch==2.0.0 torchvision==0.15.1 torchaudio==2.0.1")
+#     os.system("pip3 install moviepy gradio yacs Pillow timm einops scikit-image progressbar2 progressbar torchcontrib")
 
-    sys.path.append('BiSTNet-NTIRE2023')
-    os.system("mim install mmcv-full")
-    os.system("git clone -b 0.x https://github.com/open-mmlab/mmediting.git")
-    os.system("pip3 install -e ./mmediting/")
+#     sys.path.append('BiSTNet-NTIRE2023')
+#     os.system("mim install mmcv-full")
+#     os.system("git clone -b 0.x https://github.com/open-mmlab/mmediting.git")
+#     os.system("pip3 install -e ./mmediting/")
 
-    os.system("wget https://github.com/yyang181/NTIRE23-VIDEO-COLORIZATION/releases/download/v1.0.3/checkpoints.zip")
-    os.system("wget https://github.com/yyang181/NTIRE23-VIDEO-COLORIZATION/releases/download/v1.0.3/data.zip")
-    os.system("wget https://github.com/yyang181/NTIRE23-VIDEO-COLORIZATION/releases/download/v1.0.3/models.zip")
-    os.system("unzip checkpoints.zip")
-    os.system("unzip data.zip")
-    os.system("unzip models.zip")
+#     os.system("wget https://github.com/yyang181/NTIRE23-VIDEO-COLORIZATION/releases/download/v1.0.3/checkpoints.zip")
+#     os.system("wget https://github.com/yyang181/NTIRE23-VIDEO-COLORIZATION/releases/download/v1.0.3/data.zip")
+#     os.system("wget https://github.com/yyang181/NTIRE23-VIDEO-COLORIZATION/releases/download/v1.0.3/models.zip")
+#     os.system("unzip checkpoints.zip")
+#     os.system("unzip data.zip")
+#     os.system("unzip models.zip")
 
+os.system("pip3 install moviepy gradio yacs Pillow timm einops scikit-image progressbar2 progressbar torchcontrib")
 from moviepy.editor import *
 import gradio as gr
 import shutil
