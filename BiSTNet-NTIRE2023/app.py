@@ -677,7 +677,7 @@ demo = gr.Interface(
         gr.Image(label="ref1"),
         gr.Image(label="ref2"),
         gr.Number(value=448, label="Image size width for network inference", info='In order to handle longer videos, one approach is to decrease the image width and height. However, it is important to note that this reduction in dimensions may result in a drop in performance.', precision=0),
-        gr.Number(value=896, label="Image size height for network inference", info='In order to handle longer videos, one approach is to decrease the image width and height. However, it is important to note that this reduction in dimensions may result in a drop in performance.', precision=0),
+        gr.Number(value=448, label="Image size height for network inference", info='In order to handle longer videos, one approach is to decrease the image width and height. However, it is important to note that this reduction in dimensions may result in a drop in performance.', precision=0),
     ],
     outputs = [
         gr.Video(label="Colorized video"),
