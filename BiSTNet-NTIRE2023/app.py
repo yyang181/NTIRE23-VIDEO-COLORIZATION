@@ -38,17 +38,17 @@ os.system("pip3 install mmedit==0.16.1")
 
 os.system("pip3 install -r requirements.txt")
 
-if not os.path.exists('/home/.cache/model/checkpoints.zip'):
-    os.system("wget -P /home/.cache/model/ https://github.com/yyang181/NTIRE23-VIDEO-COLORIZATION/releases/download/v1.0.3/checkpoints.zip")
-    os.system("unzip /home/.cache/model/checkpoints.zip")
+if not os.path.exists('/home/xlab-app-center/.cache/model/checkpoints.zip'):
+    os.system("wget -P /home/xlab-app-center/.cache/model/ https://github.com/yyang181/NTIRE23-VIDEO-COLORIZATION/releases/download/v1.0.3/checkpoints.zip")
+    os.system("unzip /home/xlab-app-center/.cache/model/checkpoints.zip")
 
-if not os.path.exists('/home/.cache/model/data.zip'):
-    os.system("wget -P /home/.cache/model/ https://github.com/yyang181/NTIRE23-VIDEO-COLORIZATION/releases/download/v1.0.3/data.zip")
-    os.system("unzip /home/.cache/model/data.zip")
+if not os.path.exists('/home/xlab-app-center/.cache/model/data.zip'):
+    os.system("wget -P /home/xlab-app-center/.cache/model/ https://github.com/yyang181/NTIRE23-VIDEO-COLORIZATION/releases/download/v1.0.3/data.zip")
+    os.system("unzip /home/xlab-app-center/.cache/model/data.zip")
 
-if not os.path.exists('/home/.cache/model/models.zip'):
-    os.system("wget -P /home/.cache/model/ https://github.com/yyang181/NTIRE23-VIDEO-COLORIZATION/releases/download/v1.0.3/models.zip")
-    os.system("unzip /home/.cache/model/models.zip")
+if not os.path.exists('/home/xlab-app-center/.cache/model/models.zip'):
+    os.system("wget -P /home/xlab-app-center/.cache/model/ https://github.com/yyang181/NTIRE23-VIDEO-COLORIZATION/releases/download/v1.0.3/models.zip")
+    os.system("unzip /home/xlab-app-center/.cache/model/models.zip")
 
 import torch
 print(torch.__version__)
