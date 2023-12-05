@@ -59,4 +59,4 @@ progressbar==2.5
 torchcontrib==0.0.2
 pydantic==1.10.2
 fastapi==0.98.0
-pynvm
+pynvml==11.5.0
