@@ -24,10 +24,7 @@ import os
 #     os.system("unzip models.zip")
 
 # for openxlab codes
-print(os.getcwd())
-print(os.listdir('/home/xlab-app-center/'))
-os.chdir('/home/xlab-app-center/NTIRE23-VIDEO-COLORIZATION/BiSTNet-NTIRE2023/')
-print(os.getcwd())
+os.chdir('/home/xlab-app-center/BiSTNet-NTIRE2023/')
 os.system("pip3 uninstall torch -y")
 os.system("pip3 install torch==1.11.0+cu113 torchvision==0.12.0+cu113 torchaudio==0.11.0 --extra-index-url https://download.pytorch.org/whl/cu113")
 os.system("pip3 install -U openmim")
