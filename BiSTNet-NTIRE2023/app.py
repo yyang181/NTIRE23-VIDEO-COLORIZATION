@@ -38,12 +38,12 @@ os.system("pip3 install mmedit==0.16.1")
 
 os.system("pip3 install moviepy gradio yacs Pillow timm einops scikit-image progressbar2 progressbar torchcontrib opencv-contrib-python")
 
-os.system("wget https://github.com/yyang181/NTIRE23-VIDEO-COLORIZATION/releases/download/v1.0.3/checkpoints.zip")
-os.system("wget https://github.com/yyang181/NTIRE23-VIDEO-COLORIZATION/releases/download/v1.0.3/data.zip")
-os.system("wget https://github.com/yyang181/NTIRE23-VIDEO-COLORIZATION/releases/download/v1.0.3/models.zip")
-os.system("unzip checkpoints.zip")
-os.system("unzip data.zip")
-os.system("unzip models.zip")
+# os.system("wget https://github.com/yyang181/NTIRE23-VIDEO-COLORIZATION/releases/download/v1.0.3/checkpoints.zip")
+# os.system("wget https://github.com/yyang181/NTIRE23-VIDEO-COLORIZATION/releases/download/v1.0.3/data.zip")
+# os.system("wget https://github.com/yyang181/NTIRE23-VIDEO-COLORIZATION/releases/download/v1.0.3/models.zip")
+# os.system("unzip checkpoints.zip")
+# os.system("unzip data.zip")
+# os.system("unzip models.zip")
 
 import torch
 print(torch.__version__)
