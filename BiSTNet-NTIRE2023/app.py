@@ -684,7 +684,7 @@ demo = gr.Interface(
     ],
     examples=[
         [a, a_ref1, a_ref2, 448, 448],
-        [b, b_ref1, b_ref2, 448, 448],
+        [b, b_ref1, b_ref2, 256, 256],
     ],
     # cache_examples=True,
     title=title,
