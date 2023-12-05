@@ -24,6 +24,7 @@ import os
 #     os.system("unzip models.zip")
 
 # for openxlab codes
+print(os.getcwd())
 os.chdir('./NTIRE23-VIDEO-COLORIZATION/BiSTNet-NTIRE2023/')
 print(os.getcwd())
 os.system("pip3 uninstall torch -y")
