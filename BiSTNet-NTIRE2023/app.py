@@ -650,6 +650,8 @@ def inference(video, ref1, ref2, width, height):
         except:
             raise gr.Error("Error: GPU out of memory.")
             out_video = None
+            demo.close()
+            demo.launch()
     return out_video
 
 
