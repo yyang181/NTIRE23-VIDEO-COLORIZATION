@@ -696,4 +696,4 @@ demo = gr.Interface(
     article=article,       
 )
 
-demo.launch(show_errors='True')
+demo.launch()
