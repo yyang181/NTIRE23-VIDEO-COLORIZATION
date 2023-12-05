@@ -465,7 +465,7 @@ def video2frames(video_dir, out_frames_dir="None"):
     return int(fps)
 
 def inference(video, ref1, ref2, width, height):
-    os.system("nvidia-smi")
+    # os.system("nvidia-smi")
     pynvml.nvmlInit()
     for dev_id in range(pynvml.nvmlDeviceGetCount()):
         handle = pynvml.nvmlDeviceGetHandleByIndex(dev_id)
@@ -475,8 +475,7 @@ def inference(video, ref1, ref2, width, height):
             os.system("kill -9 %s"%proc.pid)
             
     os.system("nvidia-smi")
-    # os.system("nvidia-smi --query-compute-apps=pid,used_memory --format=csv,noheader")
-    # os.system("nvidia-smi --query-compute-apps=pid,used_memory --format=csv,noheader | xargs -n1 kill -9")
+    os.system("gpustat")
 
     video_name = video.split('/')[-1].split('.')[0]
     out_frames_dir="./results/input/"+video_name
