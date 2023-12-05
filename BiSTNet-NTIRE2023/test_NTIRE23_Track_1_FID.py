@@ -385,9 +385,9 @@ if __name__ == "__main__":
    
    
     # 20230215 ntire test set 
-    parser.add_argument("--clip_path", type=str, default="../demo_dataset/input", help="path of input clips")
-    parser.add_argument("--ref_path", type=str, default="../demo_dataset/ref", help="path of refernce images")
-    parser.add_argument("--output_path", type=str, default="../demo_dataset/output", help="path of output clips")
+    parser.add_argument("--clip_path", type=str, default="../demo_dataset1/input", help="path of input clips")
+    parser.add_argument("--ref_path", type=str, default="../demo_dataset1/ref", help="path of refernce images")
+    parser.add_argument("--output_path", type=str, default="../demo_dataset1/output", help="path of output clips")
 
     start_idx = 0
     end_idx = -1

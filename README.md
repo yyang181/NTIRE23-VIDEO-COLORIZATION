@@ -65,10 +65,10 @@ cd .. && pip install -r pip_requirements.txt
 This version is specifically designed for [NTIRE 2023 Video Colorization Challenge](https://tianchi.aliyun.com/competition/entrance/532054/rankingList) @ CVPR 2023. We colorize every 50 frames with two exemplars, see clip *001* for an example. 
 
 - **Download Pre-trained Models**: download a pretrained colorization model from the tabulated links, and put it into the folder `./BiSTNet-NTIRE2023/`, like `./BiSTNet-NTIRE2023/checkpoints` , `./BiSTNet-NTIRE2023/data` and `./BiSTNet-NTIRE2023/models/protoseg_core/checkpoints` .
-- **Prepare Testing Data**: You can put the testing images in a folder, like clip *001* at `./demo_dataset`.
-  - `demo_dataset/input`: the directory of input grayscale images.
-  - `demo_dataset/ref`: the directory of reference images (only `f001.png, f050.png and f100.png` are colorful images).
-  - `demo_dataset/output`: the directory to save the colorization results.
+- **Prepare Testing Data**: You can put the testing images in a folder, like clip *001* at `./demo_dataset1`.
+  - `demo_dataset1/input`: the directory of input grayscale images.
+  - `demo_dataset1/ref`: the directory of reference images (only `f001.png, f050.png and f100.png` are colorful images).
+  - `demo_dataset1/output`: the directory to save the colorization results.
 - **Test on Images**: 
 
 ```
@@ -82,13 +82,13 @@ For more details please refer to [test_NTIRE23_Track_1_FID.py](https://github.co
 
 This version allows arbitrary number of input video frames with two exemplars. See clip *fanghua234* for an example. 
 
-- **Prepare Testing Data**: You can put the testing images in a folder, like *fanghua234* at `./demo_dataset`.
+- **Prepare Testing Data**: You can put the testing images in a folder, like *fanghua234* at `./demo_dataset2`.
 
-  - `demo_dataset/input`: the directory of input grayscale images.
+  - `demo_dataset2/input`: the directory of input grayscale images.
 
-  - `demo_dataset/ref`: the directory of reference images ( `frame0000.png, frame0150.png`).
+  - `demo_dataset2/ref`: the directory of reference images ( `frame0000.png, frame0150.png`).
 
-  - `demo_dataset/output`: the directory to save the colorization results.
+  - `demo_dataset2/output`: the directory to save the colorization results.
 
 - **Test on Images**: 
 
