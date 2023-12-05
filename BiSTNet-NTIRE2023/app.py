@@ -475,8 +475,8 @@ def inference(video, ref1, ref2, width, height):
             )
 
     os.system("nvidia-smi")
-    os.system("nvidia-smi --query-compute-apps pid --format=csv,noheader")
-    os.system("nvidia-smi --query-compute-apps=pid --format=csv,noheader | xargs -n1 kill -9")
+    os.system("nvidia-smi --query-compute-apps=pid,used_memory --format=csv,noheader")
+    os.system("nvidia-smi --query-compute-apps=pid,used_memory --format=csv,noheader | xargs -n1 kill -9")
 
     video_name = video.split('/')[-1].split('.')[0]
     out_frames_dir="./results/input/"+video_name
