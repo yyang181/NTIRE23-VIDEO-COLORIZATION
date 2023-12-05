@@ -64,3 +64,5 @@ scikit-image==0.19.3
 progressbar2==4.2.0
 progressbar==2.5
 torchcontrib==0.0.2
+pydantic==1.10.2
+fastapi==0.98.0
