@@ -12,7 +12,7 @@ We provide the colorized images [HERE](https://drive.google.com/drive/folders/1j
 
 ## :briefcase: Dependencies and Installation
 
-- PyTorch >= 1.8.0 (please do not use 2.1.0)
+- PyTorch >= 1.8.0 (please do not use 2.0.1)
 
 - CUDA >= 10.2
 
