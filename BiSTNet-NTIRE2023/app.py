@@ -610,29 +610,33 @@ def inference(video, ref1, ref2, width, height):
         len_interval = 50
         flag_lf_split_test_set = False
 
-        out_video = colorize_video(
-            10,
-            video_name,
-            opt_image_size_ori,
-            atb,
-            trans_forward_protoseg_lll,
-            hed,
-            opt_image_size,
-            opt,
-            opt_clip_path,
-            ref1,
-            ref2,
-            # os.path.join(opt_output_path, clip_name + "_" + ref_name.split(".")[0]),
-            os.path.join(opt_output_path),
-            nonlocal_net,
-            colornet,
-            fusenet,
-            vggnet,
-            flownet,
-            flag_lf_split_test_set,
-            0,
-            0,
-        )
+        try:
+            out_video = colorize_video(
+                10,
+                video_name,
+                opt_image_size_ori,
+                atb,
+                trans_forward_protoseg_lll,
+                hed,
+                opt_image_size,
+                opt,
+                opt_clip_path,
+                ref1,
+                ref2,
+                # os.path.join(opt_output_path, clip_name + "_" + ref_name.split(".")[0]),
+                os.path.join(opt_output_path),
+                nonlocal_net,
+                colornet,
+                fusenet,
+                vggnet,
+                flownet,
+                flag_lf_split_test_set,
+                0,
+                0,
+            )
+        except:
+            raise gr.error("Error: GPU out of memory.")
+            out_video = None
     return out_video
 
 
@@ -692,4 +696,4 @@ demo = gr.Interface(
     article=article,       
 )
 
-demo.launch()
+demo.launch(show_errors='True')
