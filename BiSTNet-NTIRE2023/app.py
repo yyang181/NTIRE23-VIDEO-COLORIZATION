@@ -25,6 +25,7 @@ import os
 
 # for openxlab codes
 print(os.getcwd())
+print(os.listdir('/home/xlab-app-center/'))
 os.chdir('/home/xlab-app-center/NTIRE23-VIDEO-COLORIZATION/BiSTNet-NTIRE2023/')
 print(os.getcwd())
 os.system("pip3 uninstall torch -y")
