@@ -683,8 +683,8 @@ demo = gr.Interface(
         gr.Video(label="Colorized video"),
     ],
     examples=[
-        [a, a_ref1, a_ref2, 448, 896],
-        [b, b_ref1, b_ref2, 448, 896],
+        [a, a_ref1, a_ref2, 448, 448],
+        [b, b_ref1, b_ref2, 448, 448],
     ],
     # cache_examples=True,
     title=title,
