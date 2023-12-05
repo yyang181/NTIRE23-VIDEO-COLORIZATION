@@ -36,7 +36,8 @@ os.system("mim install mmcv-full")
 # os.system("pip3 install -e ./mmediting/")
 os.system("pip3 install mmedit==0.16.1")
 
-os.system("pip3 install moviepy gradio yacs Pillow timm einops scikit-image progressbar2 progressbar torchcontrib opencv-contrib-python")
+os.system("pip3 install -r requirements.txt")
+# os.system("pip3 install moviepy gradio yacs Pillow timm einops scikit-image progressbar2 progressbar torchcontrib opencv-contrib-python")
 
 # os.system("wget https://github.com/yyang181/NTIRE23-VIDEO-COLORIZATION/releases/download/v1.0.3/checkpoints.zip")
 # os.system("wget https://github.com/yyang181/NTIRE23-VIDEO-COLORIZATION/releases/download/v1.0.3/data.zip")
