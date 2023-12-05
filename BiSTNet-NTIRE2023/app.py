@@ -53,6 +53,7 @@ if not os.path.exists('/home/xlab-app-center/.cache/model/models.zip'):
 import torch
 print(torch.__version__)
 import mmedit
+import pynvml
 from moviepy.editor import *
 import gradio as gr
 import shutil
@@ -464,9 +465,19 @@ def video2frames(video_dir, out_frames_dir="None"):
     return int(fps)
 
 def inference(video, ref1, ref2, width, height):
+    pynvml.nvmlInit()
+    for dev_id in range(pynvml.nvmlDeviceGetCount()):
+        handle = pynvml.nvmlDeviceGetHandleByIndex(dev_id)
+        for proc in pynvml.nvmlDeviceGetComputeRunningProcesses(handle):
+            print(
+                "pid %d using %d bytes of memory on device %d."
+                % (proc.pid, proc.usedGpuMemory, dev_id)
+            )
+
     os.system("nvidia-smi")
     os.system("nvidia-smi --query-compute-apps pid --format=csv,noheader")
     os.system("nvidia-smi --query-compute-apps=pid --format=csv,noheader | xargs -n1 kill -9")
+
     video_name = video.split('/')[-1].split('.')[0]
     out_frames_dir="./results/input/"+video_name
     video_fps = video2frames(video, out_frames_dir)
