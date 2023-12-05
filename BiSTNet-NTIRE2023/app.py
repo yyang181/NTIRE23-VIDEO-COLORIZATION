@@ -38,14 +38,17 @@ os.system("pip3 install mmedit==0.16.1")
 
 os.system("pip3 install -r requirements.txt")
 
-os.system("wget https://github.com/yyang181/NTIRE23-VIDEO-COLORIZATION/releases/download/v1.0.3/checkpoints.zip")
-os.system("unzip checkpoints.zip")
+if not os.path.exists('checkpoints.zip'):
+    os.system("wget https://github.com/yyang181/NTIRE23-VIDEO-COLORIZATION/releases/download/v1.0.3/checkpoints.zip")
+    os.system("unzip checkpoints.zip")
 
-os.system("wget https://github.com/yyang181/NTIRE23-VIDEO-COLORIZATION/releases/download/v1.0.3/data.zip")
-os.system("unzip data.zip")
+if not os.path.exists('data.zip'):
+    os.system("wget https://github.com/yyang181/NTIRE23-VIDEO-COLORIZATION/releases/download/v1.0.3/data.zip")
+    os.system("unzip data.zip")
 
-os.system("wget https://github.com/yyang181/NTIRE23-VIDEO-COLORIZATION/releases/download/v1.0.3/models.zip")
-os.system("unzip models.zip")
+if not os.path.exists('models.zip'):
+    os.system("wget https://github.com/yyang181/NTIRE23-VIDEO-COLORIZATION/releases/download/v1.0.3/models.zip")
+    os.system("unzip models.zip")
 
 import torch
 print(torch.__version__)
