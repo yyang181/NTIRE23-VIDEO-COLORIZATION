@@ -2,27 +2,6 @@ from __future__ import print_function
 import sys
 import os
 
-# import torch
-# if torch.__version__ == '2.0.1':
-#     print('torch version is 2.0.1')
-#     print(torch.__version__)
-#     # assert 0
-#     os.system("pip uninstall torch -y")
-#     os.system("pip install torch==2.0.0 torchvision==0.15.1 torchaudio==2.0.1")
-#     os.system("pip3 install moviepy gradio yacs Pillow timm einops scikit-image progressbar2 progressbar torchcontrib")
-
-#     sys.path.append('BiSTNet-NTIRE2023')
-#     os.system("mim install mmcv-full")
-#     os.system("git clone -b 0.x https://github.com/open-mmlab/mmediting.git")
-#     os.system("pip3 install -e ./mmediting/")
-
-#     os.system("wget https://github.com/yyang181/NTIRE23-VIDEO-COLORIZATION/releases/download/v1.0.3/checkpoints.zip")
-#     os.system("wget https://github.com/yyang181/NTIRE23-VIDEO-COLORIZATION/releases/download/v1.0.3/data.zip")
-#     os.system("wget https://github.com/yyang181/NTIRE23-VIDEO-COLORIZATION/releases/download/v1.0.3/models.zip")
-#     os.system("unzip checkpoints.zip")
-#     os.system("unzip data.zip")
-#     os.system("unzip models.zip")
-
 # for openxlab codes
 os.chdir('/home/xlab-app-center/BiSTNet-NTIRE2023/')
 os.system("pip3 uninstall torch -y")
@@ -48,6 +27,7 @@ if not os.path.exists('/home/xlab-app-center/.cache/model/models.zip'):
 
 import torch
 print(torch.__version__)
+# import gc
 import mmedit
 import pynvml
 from moviepy.editor import *
@@ -171,7 +151,8 @@ def ColorVid_inference(I_list, I1reference_video, features_B, vggnet, nonlocal_n
     print('ColorVid_inference1') if flag_forward else print('ColorVid_inference2') 
     for index, i_idx in enumerate(tqdm(iter_item)):
     # for i_idx in iter_item:
-        with torch.autograd.set_grad_enabled(joint_training):
+        # with torch.autograd.set_grad_enabled(joint_training):
+        with torch.no_grad():
             I_current_lab = I_list[i_idx]
             if I_last_lab_predict is None:
                 I_last_lab_predict = torch.zeros_like(I_current_lab).cuda()
@@ -325,44 +306,43 @@ def colorize_video(fps, video_name,opt_image_size_ori,atb,trans_forward_protoseg
         I_reference_rgb_from_gray = gray2rgb_batch(IB_lab2[:, 0:1, :, :])
         features_B2 = vggnet(I_reference_rgb_from_gray, ["r12", "r22", "r32", "r42", "r52"], preprocess=True)
 
+        # ColorVid inference
+        colorvid1, similarity_map_list1 = ColorVid_inference(I_list, IB_lab1, features_B1, vggnet, nonlocal_net, colornet, joint_training=False, flag_forward=True)
+        colorvid2, similarity_map_list2 = ColorVid_inference(I_list, IB_lab2, features_B2, vggnet, nonlocal_net, colornet, joint_training=False, flag_forward=False)
+        colorvid2.reverse()
+        similarity_map_list2.reverse()
 
-    # ColorVid inference
-    colorvid1, similarity_map_list1 = ColorVid_inference(I_list, IB_lab1, features_B1, vggnet, nonlocal_net, colornet, joint_training=False, flag_forward=True)
-    colorvid2, similarity_map_list2 = ColorVid_inference(I_list, IB_lab2, features_B2, vggnet, nonlocal_net, colornet, joint_training=False, flag_forward=False)
-    colorvid2.reverse()
-    similarity_map_list2.reverse()
+        # FUSION SimilarityMap
+        similarityMap = []
+        for i in range(len(similarity_map_list1)):
+            # Fusion Mask Test
+            FusionMask = torch.gt(similarity_map_list1[i], similarity_map_list2[i])
+            FusionMask = torch.cat([FusionMask,FusionMask,FusionMask], dim = 1)
 
-    # FUSION SimilarityMap
-    similarityMap = []
-    for i in range(len(similarity_map_list1)):
-        # Fusion Mask Test
-        FusionMask = torch.gt(similarity_map_list1[i], similarity_map_list2[i])
-        FusionMask = torch.cat([FusionMask,FusionMask,FusionMask], dim = 1)
+            Fused_Color = colorvid2[i]
+            Fused_Color[FusionMask] = colorvid1[i][FusionMask]
+            similarityMap.append(Fused_Color)
 
-        Fused_Color = colorvid2[i]
-        Fused_Color[FusionMask] = colorvid1[i][FusionMask]
-        similarityMap.append(Fused_Color)
+        # HED EdgeMask
+        edgemask = HED_EdgeMask(hed,I_list)
 
-    # HED EdgeMask
-    edgemask = HED_EdgeMask(hed,I_list)
+        # Proto Seg
+        segmask = proto_segmask(trans_forward_protoseg_lll, I_list, flag_save_protoseg=False)
 
-    # Proto Seg
-    segmask = proto_segmask(trans_forward_protoseg_lll, I_list, flag_save_protoseg=False)
+        flows_forward, flows_backward = bipropagation(colorvid1, colorvid2, I_list, flownet, atb, flag_save_flow_warp=False)
 
-    flows_forward, flows_backward = bipropagation(colorvid1, colorvid2, I_list, flownet, atb, flag_save_flow_warp=False)
+        print('fusenet v1: concat ref1+ref2')
+        joint_training = False
+        for index, i_idx in enumerate(tqdm(range(len(I_list)))):
+            I_current_l = I_list[i_idx][:,:1,:,:]
+            I_current_ab = I_list[i_idx][:,1:,:,:]
 
-    print('fusenet v1: concat ref1+ref2')
-    joint_training = False
-    for index, i_idx in enumerate(tqdm(range(len(I_list)))):
-        I_current_l = I_list[i_idx][:,:1,:,:]
-        I_current_ab = I_list[i_idx][:,1:,:,:]
+            # module: atb_test
+            feat_fused, ab_fuse_videointerp, ab_fuse_atb = atb(colorvid1, colorvid2, flows_forward, flows_backward)
 
-        # module: atb_test
-        feat_fused, ab_fuse_videointerp, ab_fuse_atb = atb(colorvid1, colorvid2, flows_forward, flows_backward)
-
-        fuse_input = torch.cat([I_list[i_idx][:,:1,:,:], colorvid1[i_idx][:,1:,:,:], colorvid2[i_idx][:,1:,:,:], feat_fused[i_idx], segmask[i_idx,:,:,:].unsqueeze(0), edgemask[i_idx,:,:,:].unsqueeze(0), similarityMap[i_idx][:,1:,:,:]], dim=1)
-        
-        with torch.no_grad():
+            fuse_input = torch.cat([I_list[i_idx][:,:1,:,:], colorvid1[i_idx][:,1:,:,:], colorvid2[i_idx][:,1:,:,:], feat_fused[i_idx], segmask[i_idx,:,:,:].unsqueeze(0), edgemask[i_idx,:,:,:].unsqueeze(0), similarityMap[i_idx][:,1:,:,:]], dim=1)
+            
+            # with torch.no_grad():
             level1_shape = [fuse_input.shape[2], fuse_input.shape[3]]
             level2_shape = [int(fuse_input.shape[2]/2), int(fuse_input.shape[3]/2)]
             level3_shape = [int(fuse_input.shape[2]/4), int(fuse_input.shape[3]/4)]
@@ -382,48 +362,48 @@ def colorize_video(fps, video_name,opt_image_size_ori,atb,trans_forward_protoseg
             I_current_ab_predict = output_fusenet[0]
 
 
-        IA_lab_large = I_list_large_full_l[i_idx]
-        curr_bs_l = IA_lab_large[:, 0:1, :, :]
-        curr_predict = (
-            torch.nn.functional.interpolate(I_current_ab_predict.data.cpu(), scale_factor=2, mode="bilinear") * 1.25
-        )
-        curr_predict = (
-            torch.nn.functional.interpolate(curr_predict, size=opt_image_size_ori, mode="bilinear")
-        )
-        # print(curr_predict.shape, curr_bs_l.shape, opt_image_size_ori);assert 0
-        # torch.Size([1, 2, 540, 960]) torch.Size([1, 1, 1080, 1920]) (540, 960)
-
-        # filtering
-        if wls_filter_on:
-            guide_image = uncenter_l(curr_bs_l) * 255 / 100
-            wls_filter = cv2.ximgproc.createFastGlobalSmootherFilter(
-                guide_image[0, 0, :, :].cpu().numpy().astype(np.uint8), lambda_value, sigma_color
+            IA_lab_large = I_list_large_full_l[i_idx]
+            curr_bs_l = IA_lab_large[:, 0:1, :, :]
+            curr_predict = (
+                torch.nn.functional.interpolate(I_current_ab_predict.data.cpu(), scale_factor=2, mode="bilinear") * 1.25
             )
-            curr_predict_a = wls_filter.filter(curr_predict[0, 0, :, :].cpu().numpy())
-            curr_predict_b = wls_filter.filter(curr_predict[0, 1, :, :].cpu().numpy())
-            curr_predict_a = torch.from_numpy(curr_predict_a).unsqueeze(0).unsqueeze(0)
-            curr_predict_b = torch.from_numpy(curr_predict_b).unsqueeze(0).unsqueeze(0)
-            curr_predict_filter = torch.cat((curr_predict_a, curr_predict_b), dim=1)
-            IA_predict_rgb = batch_lab2rgb_transpose_mc(curr_bs_l[:32], curr_predict_filter[:32, ...])
-        else:
-            IA_predict_rgb = batch_lab2rgb_transpose_mc(curr_bs_l[:32], curr_predict[:32, ...])
+            curr_predict = (
+                torch.nn.functional.interpolate(curr_predict, size=opt_image_size_ori, mode="bilinear")
+            )
+            # print(curr_predict.shape, curr_bs_l.shape, opt_image_size_ori);assert 0
+            # torch.Size([1, 2, 540, 960]) torch.Size([1, 1, 1080, 1920]) (540, 960)
 
-        os.makedirs(output_path, exist_ok=True)
-        save_frames_wOriName(IA_predict_rgb, output_path, image_name=filenames[index])
+            patchsize = 32
+            # filtering
+            if wls_filter_on:
+                guide_image = uncenter_l(curr_bs_l) * 255 / 100
+                wls_filter = cv2.ximgproc.createFastGlobalSmootherFilter(
+                    guide_image[0, 0, :, :].cpu().numpy().astype(np.uint8), lambda_value, sigma_color
+                )
+                curr_predict_a = wls_filter.filter(curr_predict[0, 0, :, :].cpu().numpy())
+                curr_predict_b = wls_filter.filter(curr_predict[0, 1, :, :].cpu().numpy())
+                curr_predict_a = torch.from_numpy(curr_predict_a).unsqueeze(0).unsqueeze(0)
+                curr_predict_b = torch.from_numpy(curr_predict_b).unsqueeze(0).unsqueeze(0)
+                curr_predict_filter = torch.cat((curr_predict_a, curr_predict_b), dim=1)
+                IA_predict_rgb = batch_lab2rgb_transpose_mc(curr_bs_l[:patchsize], curr_predict_filter[:patchsize, ...])
+            else:
+                IA_predict_rgb = batch_lab2rgb_transpose_mc(curr_bs_l[:patchsize], curr_predict[:patchsize, ...])
 
-    filename='%s_colorized.mp4'%video_name
-    folder2vid(image_folder=output_path, output_dir=os.path.join(os.path.dirname(__file__), "results"), filename=filename, fps=int(fps))
-    print(fps)
+            os.makedirs(output_path, exist_ok=True)
+            save_frames_wOriName(IA_predict_rgb, output_path, image_name=filenames[index])
 
-    # output_path = [os.path.join(os.path.dirname(__file__), "results", img_path) for img_path in filenames]
-    # print(output_path)
 
-    # convert video type
-    os.system("ffmpeg -i %s -y -vcodec libx264 %s"%(os.path.join(os.path.dirname(__file__), "results", filename), os.path.join(os.path.dirname(__file__), "results", filename.replace('.mp4', '_x264.mp4'))))
     
-    # return os.path.join(os.path.dirname(__file__), "results", filename.replace('.mp4', '_x264.mp4')), output_path
-    return os.path.join(os.path.dirname(__file__), "results", filename.replace('.mp4', '_x264.mp4'))
-
+    # except:
+    #     output_fusenet = None
+    #     del output_fusenet
+    #     # del colorvid1
+    #     # del similarity_map_list1
+    #     # del colorvid2
+    #     # del similarity_map_list2
+    #     torch.cuda.empty_cache()
+    #     raise gr.Error("Error: GPU out of memory.")
+    
 def load_pth(model, pth_path):
     nonlocal_test_path = pth_path
     state_dict_nonlocal_net = torch.load(nonlocal_test_path)
@@ -495,6 +475,8 @@ def inference(video, ref1, ref2, width, height):
     parser.add_argument(
         "--frame_propagate", default=False, type=bool, help="propagation mode, , please check the paper"
     )
+
+    parser.add_argument("--image_size", type=int, default=[448 , 896], help="the image size, eg. [216,384]")
     parser.add_argument("--cuda", action="store_false")
    
     # 20230215 ntire test set 
@@ -517,7 +499,7 @@ def inference(video, ref1, ref2, width, height):
     cudnn.benchmark = True
     print("running on GPU", opt.gpu_ids)
 
-    opt.image_size = [width,height]
+    # opt.image_size = [width,height]
     opt.clip_path = "./results/input/"
     opt.ref_path = None
 
@@ -569,8 +551,10 @@ def inference(video, ref1, ref2, width, height):
 
     # HED
     hed = Hed().cuda().eval()
+
+    patchsize = 32
     w0, h0 = opt_image_size[0], opt_image_size[1]
-    w, h = (w0 // 32) * 32, (h0 // 32) * 32
+    w, h = (w0 // patchsize) * patchsize, (h0 // patchsize) * patchsize
     # forward l
     intWidth = 480
     intHeight = 320
@@ -616,53 +600,79 @@ def inference(video, ref1, ref2, width, height):
 
         exists_or_mkdir(dirName_output)
         clip_name = opt_clip_path.split("/")[-1]
-        refs = os.listdir(opt_ref_path)
+        refs = os.listdir(opt_clip_path)
         refs.sort()
 
         ref_name = refs[start_idx].split('.')[0] + '_' + refs[end_idx].split('.')[0]
 
         len_interval = 50
-        flag_lf_split_test_set = False
+        flag_lf_split_test_set = True
 
         try:
-            out_video = colorize_video(
-                10,
-                video_name,
-                opt_image_size_ori,
-                atb,
-                trans_forward_protoseg_lll,
-                hed,
-                opt_image_size,
-                opt,
-                opt_clip_path,
-                ref1,
-                ref2,
-                # os.path.join(opt_output_path, clip_name + "_" + ref_name.split(".")[0]),
-                os.path.join(opt_output_path),
-                nonlocal_net,
-                colornet,
-                fusenet,
-                vggnet,
-                flownet,
-                flag_lf_split_test_set,
-                0,
-                0,
-            )
+            for i in range(0, len((refs)), len_interval):
+                if i != 0:
+                    sub_ref = refs[i-1:i + len_interval]
+                    ActStartIdx = i-1
+                    ActEndIdx = i + len_interval 
+                else:
+                    sub_ref = refs[i:i + len_interval]
+                    ActStartIdx = i
+                    ActEndIdx = i + len_interval
+                ActEndIdx = min(ActEndIdx, len(os.listdir(opt_clip_path)))
+
+                print(i, 'startImg: %s endImg: %s, ActStartIdx: %s, ActEndIdx: %s'%(sub_ref[0], sub_ref[-1], ActStartIdx, ActEndIdx))
+
+                colorize_video(
+                    10,
+                    video_name,
+                    opt_image_size_ori,
+                    atb,
+                    trans_forward_protoseg_lll,
+                    hed,
+                    opt_image_size,
+                    opt,
+                    opt_clip_path,
+                    ref1,
+                    ref2,
+                    # os.path.join(opt_output_path, clip_name + "_" + ref_name.split(".")[0]),
+                    os.path.join(opt_output_path),
+                    nonlocal_net,
+                    colornet,
+                    fusenet,
+                    vggnet,
+                    flownet,
+                    flag_lf_split_test_set,
+                    ActStartIdx,
+                    ActEndIdx,
+                )
+
+            filename='%s_colorized.mp4'%video_name
+            folder2vid(image_folder=os.path.join(opt_output_path), output_dir=os.path.join(os.path.dirname(__file__), "results"), filename=filename, fps=int(10))
+
+
+            # convert video type
+            os.system("ffmpeg -i %s -y -vcodec libx264 %s"%(os.path.join(os.path.dirname(__file__), "results", filename), os.path.join(os.path.dirname(__file__), "results", filename.replace('.mp4', '_x264.mp4'))))
+            
+            out_video = os.path.join(os.path.dirname(__file__), "results", filename.replace('.mp4', '_x264.mp4'))
+    
             output_video_copy = out_video
             del out_video
             torch.cuda.empty_cache()
-        except:
-            raise gr.Error("Error: GPU out of memory.")
-            # out_video = None
-            # del out_video
-            # del files_path
+
+        except Exception as e:
+            out_video = None
+            output_video_copy = out_video
+            del out_video
             torch.cuda.empty_cache()
+            raise gr.Error("Error: %s"%e)
+
     return output_video_copy
 
 
 title = "BiSTNet: Semantic Image Prior Guided Bidirectional Temporal Feature Fusion for Deep Exemplar-based Video Colorization"
 description = r"""
-<b>Official Gradio demo</b> for <a href='https://github.com/yyang181/NTIRE23-VIDEO-COLORIZATION' target='_blank'><b>BiSTNet: Semantic Image Prior Guided Bidirectional Temporal Feature Fusion for Deep Exemplar-based Video Colorization</b></a>.<br>
+<b>Official Gradio demo</b> for <a href='https://github.com/yyang181/NTIRE23-VIDEO-COLORIZATION' target='_blank'><b>BiSTNet: Semantic Image Prior Guided Bidirectional Temporal Feature Fusion for Deep Exemplar-based Video Colorization</b></a>.<br><b>
+Note that we process every 50 input video frames with an inference resolution of 448x896 in this demo to mitigate GPU memory issues.<b> <b>For optimal performance, we recommend cloning our codes and executing them on your local machine.<b>
 """
 article = r"""
 If BiSTNet is helpful, please help to ⭐ the <a href='https://github.com/yyang181/NTIRE23-VIDEO-COLORIZATION' target='_blank'>Github Repo1</a> and <a href='https://github.com/yyang181/BiSTNet/tree/main' target='_blank'>Github Repo2</a>. Thanks!
@@ -673,11 +683,11 @@ If BiSTNet is helpful, please help to ⭐ the <a href='https://github.com/yyang1
 
 If our work is useful for your research, please consider citing:
 ```bibtex
-@inproceedings{yang2022bistnet,
-    title={BiSTNet: Semantic Image Prior Guided Bidirectional Temporal Feature Fusion for Deep Exemplar-based Video Colorization},
-    author={Yang, Yixin and Peng, Zhongzheng and Du, Xiaoyu and Tao, Zhulin and Tang, Jinhui and Pan, Jinshan},
-    booktitle={arXiv preprint arXiv:2212.02268},
-    year={2022}
+@article{bistnet,
+  title={BiSTNet: Semantic Image Prior Guided Bidirectional Temporal Feature Fusion for Deep Exemplar-based Video Colorization},
+  author={Yang, Yixin and Peng, Zhongzheng and Du, Xiaoyu and Tao, Zhulin and Tang, Jinhui and Pan, Jinshan},
+  journal={arXiv preprint arXiv:2212.02268},
+  year={2022}
 }
 ```
 
@@ -693,23 +703,29 @@ b = "../demo_dataset/fanghua234.mp4"  # Video
 b_ref1 = "../demo_dataset/ref/fanghua234/frame0000.png"
 b_ref2 = "../demo_dataset/ref/fanghua234/frame0150.png"
 
+c = "../demo_dataset/gaslight_1944.mp4"  # Video
+c_ref1 = "../demo_dataset/ref/gaslight_1944/ref1.png"
+c_ref2 = "../demo_dataset/ref/gaslight_1944/ref2.png"
 
 demo = gr.Interface(
     fn=inference, 
     inputs=[
-        gr.Video(label="video"),
+        gr.Video(label="video", ),
         gr.Image(label="ref1"),
         gr.Image(label="ref2"),
-        gr.Number(value=448, label="Image size width for network inference", info='In order to handle longer videos, one approach is to decrease the image width and height. However, it is important to note that this reduction in dimensions may result in a drop in performance.', precision=0),
-        gr.Number(value=448, label="Image size height for network inference", info='In order to handle longer videos, one approach is to decrease the image width and height. However, it is important to note that this reduction in dimensions may result in a drop in performance.', precision=0),
+        # gr.Number(value=448, label="Image size width for network inference", info='In order to handle longer videos, one approach is to decrease the image width and height. However, it is important to note that this reduction in dimensions may result in a drop in performance.', precision=0),
+        # gr.Number(value=448, label="Image size height for network inference", info='In order to handle longer videos, one approach is to decrease the image width and height. However, it is important to note that this reduction in dimensions may result in a drop in performance.', precision=0),
     ],
     outputs = [
         gr.Video(label="Colorized video"),
         # gr.FileExplorer(label="Colorized video frames")
     ],
     examples=[
-        [a, a_ref1, a_ref2, 448, 448],
-        [b, b_ref1, b_ref2, 256, 256],
+        # [a, a_ref1, a_ref2, 448, 448],
+        # [b, b_ref1, b_ref2, 448, 448],
+        [a, a_ref1, a_ref2],
+        [b, b_ref1, b_ref2],
+        [c, c_ref1, c_ref2],
     ],
     # cache_examples=True,
     title=title,
