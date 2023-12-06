@@ -466,15 +466,15 @@ def video2frames(video_dir, out_frames_dir="None"):
 
 def inference(video, ref1, ref2, width, height):
     # os.system("nvidia-smi")
-    pynvml.nvmlInit()
-    for dev_id in range(pynvml.nvmlDeviceGetCount()):
-        handle = pynvml.nvmlDeviceGetHandleByIndex(dev_id)
-        for proc in pynvml.nvmlDeviceGetComputeRunningProcesses(handle):
-            # print("pid %d using %d bytes of memory on device %d."% (proc.pid, proc.usedGpuMemory, dev_id))
-            print("pid %d using %d M of memory on device %d."% (proc.pid, proc.usedGpuMemory/6, dev_id))
-            os.system("kill -9 %s"%proc.pid)
+    # pynvml.nvmlInit()
+    # for dev_id in range(pynvml.nvmlDeviceGetCount()):
+    #     handle = pynvml.nvmlDeviceGetHandleByIndex(dev_id)
+    #     for proc in pynvml.nvmlDeviceGetComputeRunningProcesses(handle):
+    #         # print("pid %d using %d bytes of memory on device %d."% (proc.pid, proc.usedGpuMemory, dev_id))
+    #         print("pid %d using %d M of memory on device %d."% (proc.pid, proc.usedGpuMemory/6, dev_id))
+    #         os.system("kill -9 %s"%proc.pid)
             
-    os.system("nvidia-smi")
+    # os.system("nvidia-smi")
     os.system("gpustat")
 
     video_name = video.split('/')[-1].split('.')[0]
@@ -647,6 +647,8 @@ def inference(video, ref1, ref2, width, height):
                 0,
                 0,
             )
+            del output
+            torch.cuda.empty_cache()
         except:
             raise gr.Error("Error: GPU out of memory.")
             out_video = None
