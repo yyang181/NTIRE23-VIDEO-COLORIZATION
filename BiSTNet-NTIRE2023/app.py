@@ -30,10 +30,6 @@ os.system("pip3 install torch==1.11.0+cu113 torchvision==0.12.0+cu113 torchaudio
 os.system("pip3 install -U openmim")
 os.system("mim install mmcv-full")
 
-# os.system("rm -rf mmediting")
-# os.system("pip3 uninstall mmedit")
-# os.system("git clone -b 0.x https://github.com/open-mmlab/mmediting.git")
-# os.system("pip3 install -e ./mmediting/")
 os.system("pip3 install mmedit==0.16.1")
 
 os.system("pip3 install -r requirements.txt")
@@ -419,8 +415,13 @@ def colorize_video(fps, video_name,opt_image_size_ori,atb,trans_forward_protoseg
     folder2vid(image_folder=output_path, output_dir=os.path.join(os.path.dirname(__file__), "results"), filename=filename, fps=int(fps))
     print(fps)
 
+    # output_path = [os.path.join(os.path.dirname(__file__), "results", img_path) for img_path in filenames]
+    # print(output_path)
+
     # convert video type
     os.system("ffmpeg -i %s -y -vcodec libx264 %s"%(os.path.join(os.path.dirname(__file__), "results", filename), os.path.join(os.path.dirname(__file__), "results", filename.replace('.mp4', '_x264.mp4'))))
+    
+    # return os.path.join(os.path.dirname(__file__), "results", filename.replace('.mp4', '_x264.mp4')), output_path
     return os.path.join(os.path.dirname(__file__), "results", filename.replace('.mp4', '_x264.mp4'))
 
 def load_pth(model, pth_path):
@@ -647,14 +648,16 @@ def inference(video, ref1, ref2, width, height):
                 0,
                 0,
             )
+            output_video_copy = out_video
             del out_video
             torch.cuda.empty_cache()
         except:
             raise gr.Error("Error: GPU out of memory.")
-            out_video = None
-            del out_video
+            # out_video = None
+            # del out_video
+            # del files_path
             torch.cuda.empty_cache()
-    return out_video
+    return output_video_copy
 
 
 title = "BiSTNet: Semantic Image Prior Guided Bidirectional Temporal Feature Fusion for Deep Exemplar-based Video Colorization"
@@ -702,6 +705,7 @@ demo = gr.Interface(
     ],
     outputs = [
         gr.Video(label="Colorized video"),
+        # gr.FileExplorer(label="Colorized video frames")
     ],
     examples=[
         [a, a_ref1, a_ref2, 448, 448],
