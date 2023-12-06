@@ -647,13 +647,13 @@ def inference(video, ref1, ref2, width, height):
                 0,
                 0,
             )
-            del output
+            del out_video
             torch.cuda.empty_cache()
         except:
             raise gr.Error("Error: GPU out of memory.")
             out_video = None
-            demo.close()
-            demo.launch()
+            del out_video
+            torch.cuda.empty_cache()
     return out_video
 
 
