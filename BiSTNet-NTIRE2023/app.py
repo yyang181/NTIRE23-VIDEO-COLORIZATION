@@ -710,7 +710,7 @@ c_ref2 = "/home/xlab-app-center/demo_dataset/ref/gaslight_1944/ref2.png"
 demo = gr.Interface(
     fn=inference, 
     inputs=[
-        gr.Video(label="video", ),
+        gr.Video(label="video", format='mp4'),
         gr.Image(label="ref1"),
         gr.Image(label="ref2"),
         # gr.Number(value=448, label="Image size width for network inference", info='In order to handle longer videos, one approach is to decrease the image width and height. However, it is important to note that this reduction in dimensions may result in a drop in performance.', precision=0),
@@ -727,7 +727,7 @@ demo = gr.Interface(
         [b, b_ref1, b_ref2],
         [c, c_ref1, c_ref2],
     ],
-    # cache_examples=True,
+    cache_examples=True,
     title=title,
     description=description,
     article=article,       
