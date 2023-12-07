@@ -733,4 +733,5 @@ demo = gr.Interface(
     article=article,       
 )
 
+demo.queue(concurrency_count=1)
 demo.launch()
