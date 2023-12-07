@@ -695,17 +695,17 @@ If our work is useful for your research, please consider citing:
 <center><img src='https://visitor-badge.laobi.icu/badge?page_id=yyang181/BiSTNet' alt='visitors'></center>
 """
 
-a = "../demo_dataset/001.mp4"  # Video
-a_ref1 = "../demo_dataset/ref/001/f001.png"
-a_ref2 = "../demo_dataset/ref/001/f100.png"
+a = "/home/xlab-app-center/demo_dataset/001.mp4"  # Video
+a_ref1 = "/home/xlab-app-center/demo_dataset/ref/001/f001.png"
+a_ref2 = "/home/xlab-app-center/demo_dataset/ref/001/f100.png"
 
-b = "../demo_dataset/fanghua234.mp4"  # Video
-b_ref1 = "../demo_dataset/ref/fanghua234/frame0000.png"
-b_ref2 = "../demo_dataset/ref/fanghua234/frame0150.png"
+b = "/home/xlab-app-center/demo_dataset/fanghua234.mp4"  # Video
+b_ref1 = "/home/xlab-app-center/demo_dataset/ref/fanghua234/frame0000.png"
+b_ref2 = "/home/xlab-app-center/demo_dataset/ref/fanghua234/frame0150.png"
 
-c = "../demo_dataset/gaslight_1944.mp4"  # Video
-c_ref1 = "../demo_dataset/ref/gaslight_1944/ref1.png"
-c_ref2 = "../demo_dataset/ref/gaslight_1944/ref2.png"
+c = "/home/xlab-app-center/demo_dataset/gaslight_1944.mp4"  # Video
+c_ref1 = "/home/xlab-app-center/demo_dataset/ref/gaslight_1944/ref1.png"
+c_ref2 = "/home/xlab-app-center/demo_dataset/ref/gaslight_1944/ref2.png"
 
 demo = gr.Interface(
     fn=inference, 
