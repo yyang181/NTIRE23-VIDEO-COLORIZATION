@@ -605,7 +605,7 @@ def inference(video, ref1, ref2, width, height):
 
         ref_name = refs[start_idx].split('.')[0] + '_' + refs[end_idx].split('.')[0]
 
-        len_interval = 50
+        len_interval = 100
         flag_lf_split_test_set = True
 
         try:
@@ -672,7 +672,7 @@ def inference(video, ref1, ref2, width, height):
 title = "BiSTNet: Semantic Image Prior Guided Bidirectional Temporal Feature Fusion for Deep Exemplar-based Video Colorization"
 description = r"""
 <b>Official Gradio demo</b> for <a href='https://github.com/yyang181/NTIRE23-VIDEO-COLORIZATION' target='_blank'><b>BiSTNet: Semantic Image Prior Guided Bidirectional Temporal Feature Fusion for Deep Exemplar-based Video Colorization</b></a>.<br><b>
-Note that we process every 50 input video frames with an inference resolution of 448x896 in this demo to mitigate GPU memory issues.<b> <b>For optimal performance, we recommend cloning our codes and executing them on your local machine.<b>
+Note that we process every 100 input video frames with an inference resolution of 448x896 in this demo to mitigate GPU memory issues.<b> <b>For optimal performance, we recommend cloning our codes and executing them on your local machine.<b>
 """
 article = r"""
 If BiSTNet is helpful, please help to ⭐ the <a href='https://github.com/yyang181/NTIRE23-VIDEO-COLORIZATION' target='_blank'>Github Repo1</a> and <a href='https://github.com/yyang181/BiSTNet/tree/main' target='_blank'>Github Repo2</a>. Thanks!
