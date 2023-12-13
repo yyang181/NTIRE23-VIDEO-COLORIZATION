@@ -250,8 +250,8 @@ def colorize_video(opt, input_path, reference_file, output_path, nonlocal_net, c
 
     I_list = [torch.nn.functional.interpolate(IA_lab_large, scale_factor=0.5, mode="bilinear") for IA_lab_large in I_list_large]
 
-    print("reference name1:", reference_file[start_idx])
-    ref_name1 = reference_file[start_idx]
+    print("reference name1:", reference_file[0])
+    ref_name1 = reference_file[0]
     with torch.no_grad():
         frame_ref = Image.open(ref_name1).convert('RGB')
         IB_lab_large = transform(frame_ref).unsqueeze(0).cuda()
@@ -259,8 +259,8 @@ def colorize_video(opt, input_path, reference_file, output_path, nonlocal_net, c
         I_reference_rgb_from_gray = gray2rgb_batch(IB_lab1[:, 0:1, :, :])
         features_B1 = vggnet(I_reference_rgb_from_gray, ["r12", "r22", "r32", "r42", "r52"], preprocess=True)
 
-    print("reference name2:", reference_file[end_idx-1])
-    ref_name2 = reference_file[end_idx-1]
+    print("reference name2:", reference_file[-1])
+    ref_name2 = reference_file[-1]
     with torch.no_grad():
         frame_ref = Image.open(ref_name2).convert('RGB')
         IB_lab_large = transform(frame_ref).unsqueeze(0).cuda()
@@ -501,23 +501,56 @@ if __name__ == "__main__":
 
         ref_name = refs[start_idx].split('.')[0] + '_' + refs[end_idx].split('.')[0]
 
-        flag_lf_split_test_set = False
+        len_interval = 100
+        flag_lf_split_test_set = True
 
-        colorize_video(
-            opt,
-            opt_clip_path,
-            [os.path.join(opt_ref_path, name) for name in refs],
-            # os.path.join(opt_output_path, clip_name + "_" + ref_name.split(".")[0]),
-            os.path.join(opt_output_path),
-            nonlocal_net,
-            colornet,
-            fusenet,
-            vggnet,
-            flownet,
-            flag_lf_split_test_set,
-            0,
-            0,
-        )
+        if flag_lf_split_test_set==False:
+            colorize_video(
+                opt,
+                opt_clip_path,
+                [os.path.join(opt_ref_path, name) for name in refs],
+                # os.path.join(opt_output_path, clip_name + "_" + ref_name.split(".")[0]),
+                os.path.join(opt_output_path),
+                nonlocal_net,
+                colornet,
+                fusenet,
+                vggnet,
+                flownet,
+                flag_lf_split_test_set,
+                0,
+                0,
+            )
+        else:
+            img_paths = sorted(os.listdir(opt_clip_path))
+            for i in range(0, len(img_paths), len_interval):
+                if i != 0:
+                    sub_ref = img_paths[i-1:i + len_interval]
+                    ActStartIdx = i-1
+                    ActEndIdx = i + len_interval 
+                else:
+                    sub_ref = img_paths[i:i + len_interval]
+                    ActStartIdx = i
+                    ActEndIdx = i + len_interval
+                ActEndIdx = min(ActEndIdx, len(os.listdir(opt_clip_path)))
+
+                print(i, 'startImg: %s endImg: %s, ActStartIdx: %s, ActEndIdx: %s'%(sub_ref[0], sub_ref[-1], ActStartIdx, ActEndIdx))
+
+                colorize_video(
+                    opt,
+                    opt_clip_path,
+                    [os.path.join(opt_ref_path, name) for name in refs],
+                    # os.path.join(opt_output_path, clip_name + "_" + ref_name.split(".")[0]),
+                    os.path.join(opt_output_path),
+                    nonlocal_net,
+                    colornet,
+                    fusenet,
+                    vggnet,
+                    flownet,
+                    flag_lf_split_test_set,
+                    ActStartIdx,
+                    ActEndIdx,
+                )
+
 
 
 
