@@ -502,7 +502,7 @@ if __name__ == "__main__":
         ref_name = refs[start_idx].split('.')[0] + '_' + refs[end_idx].split('.')[0]
 
         len_interval = 100
-        flag_lf_split_test_set = True
+        flag_lf_split_test_set = False
 
         if flag_lf_split_test_set==False:
             colorize_video(
