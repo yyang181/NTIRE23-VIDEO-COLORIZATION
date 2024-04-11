@@ -1,0 +1,7 @@
+checkpoints/
+data/
+runs/
+RAFT/models/
+mmediting/
+
+opt.txt
