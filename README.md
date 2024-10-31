@@ -63,7 +63,7 @@ cd .. && pip install -r pip_requirements.txt
 
 |  Name   |                             URL                              |                            Script                            |   FID   |   CDC    |
 | :-----: | :----------------------------------------------------------: | :----------------------------------------------------------: | :-----: | :------: |
-| BiSTNet | [model](https://drive.google.com/drive/folders/1nakixYiDq6qmP4MZw_gbAhtud4a9yz5h?usp=share_link) | [test_NTIRE23_Track_1_FID.py](https://github.com/yyang181/NTIRE23-VIDEO-COLORIZATION/blob/main/BiSTNet-NTIRE2023/test_NTIRE23_Track_1_FID.py) | 21.5372 | 0.001717 |
+| BiSTNet | [model]([https://drive.google.com/drive/folders/1nakixYiDq6qmP4MZw_gbAhtud4a9yz5h?usp=share_link](https://github.com/yyang181/NTIRE23-VIDEO-COLORIZATION/releases/download/v1.0.3/checkpoints.zip)) | [test_NTIRE23_Track_1_FID.py](https://github.com/yyang181/NTIRE23-VIDEO-COLORIZATION/blob/main/BiSTNet-NTIRE2023/test_NTIRE23_Track_1_FID.py) | 21.5372 | 0.001717 |
 
 ## :zap: Quick Inference for NTIRE 2023 Video Colorization Challenge
 
